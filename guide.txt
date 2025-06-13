@@ -1,0 +1,83 @@
+Subscriber API - Simple Usage Guide
+Available APIs
+1. Get All Subscribers
+URL: GET /api/subscribers/
+
+python
+import requests
+response = requests.get('http://localhost:8000/api/subscribers/')
+data = response.json()
+print(f"Total: {data['count']} subscribers")
+2. Filter by Disk
+URL: GET /api/subscribers/?service_id=DISK001
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/?service_id=DISK001')
+subscribers = response.json()['results']
+print(f"DISK001 has {len(subscribers)} subscribers")
+3. Filter by Email
+URL: GET /api/subscribers/?email=user@example.com
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/?email=user@example.com')
+subscriptions = response.json()['results']
+print(f"user@example.com has {len(subscriptions)} subscriptions")
+4. Search
+URL: GET /api/subscribers/?search=gmail
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/?search=gmail')
+results = response.json()['results']
+print(f"Found {len(results)} gmail users")
+5. Get Disk Subscribers
+URL: GET /api/subscribers/by_service/?service_id=DISK001
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/by_service/?service_id=DISK001')
+data = response.json()
+print(f"DISK001: {data['count']} subscribers")
+6. Get User's Disks
+URL: GET /api/subscribers/by_email/?email=user@example.com
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/by_email/?email=user@example.com')
+data = response.json()
+print(f"Disks: {data['services']}")
+7. Check Subscription
+URL: GET /api/subscribers/check/?service_id=DISK001&email=user@example.com
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/check/?service_id=DISK001&email=user@example.com')
+is_subscribed = response.json()['subscribed']
+print(f"Subscribed: {is_subscribed}")
+8. Get Statistics
+URL: GET /api/subscribers/stats/
+
+python
+response = requests.get('http://localhost:8000/api/subscribers/stats/')
+stats = response.json()
+print(f"Total subscriptions: {stats['total_subscriptions']}")
+print(f"Unique emails: {stats['unique_emails']}")
+JavaScript Examples
+javascript
+// Get all subscribers
+fetch('/api/subscribers/')
+  .then(r => r.json())
+  .then(data => console.log(`Total: ${data.count}`));
+
+// Check subscription
+fetch('/api/subscribers/check/?service_id=DISK001&email=user@example.com')
+  .then(r => r.json())
+  .then(data => console.log(`Subscribed: ${data.subscribed}`));
+
+// Get disk subscribers
+fetch('/api/subscribers/by_service/?service_id=DISK001')
+  .then(r => r.json())
+  .then(data => console.log(`${data.service_id}: ${data.count} subscribers`));
+Common Filters
+?service_id=DISK001 - Filter by disk
+?email=user@example.com - Filter by email
+?domain=gmail.com - Filter by email domain
+?search=keyword - Search in service_id and email
+?ordering=email - Sort by email
+?page=2&page_size=10 - Pagination
