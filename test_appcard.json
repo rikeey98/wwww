@@ -1,0 +1,139 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.3",
+  "$data": {
+    "categories": [
+      {
+        "categoryId": "food",
+        "categoryName": "음식",
+        "items": [
+          {
+            "itemId": "main", 
+            "itemName": "메인요리",
+            "choices": [
+              {"title": "스테이크", "value": "steak"},
+              {"title": "파스타", "value": "pasta"}
+            ]
+          },
+          {
+            "itemId": "drink",
+            "itemName": "음료", 
+            "choices": [
+              {"title": "콜라", "value": "cola"},
+              {"title": "물", "value": "water"}
+            ]
+          }
+        ]
+      },
+      {
+        "categoryId": "clothes",
+        "categoryName": "의류",
+        "items": [
+          {
+            "itemId": "top",
+            "itemName": "상의",
+            "choices": [
+              {"title": "셔츠", "value": "shirt"},
+              {"title": "티셔츠", "value": "tshirt"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "body": [
+    {
+      "type": "Container",
+      "$data": "${categories}",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "카테고리: ${categoryName}",
+          "weight": "Bolder"
+        },
+        {
+          "type": "Container",
+          "$data": "${items}",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${itemName}"
+            },
+            {
+              "type": "Input.ChoiceSet",
+              "id": "choice_${$root.categoryId}_${itemId}",
+              "choices": "${choices}"
+            },
+            {
+              "type": "ActionSet",
+              "actions": [
+                {
+                  "type": "Action.Submit",
+                  "title": "선택",
+                  "data": {
+                    "categoryId": "${$root.categoryId}",
+                    "itemId": "${itemId}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+더 간단한 버전:
+json{
+  "type": "AdaptiveCard", 
+  "version": "1.3",
+  "$data": {
+    "items": [
+      {
+        "id": "test1",
+        "title": "첫 번째 테스트",
+        "choices": [
+          {"title": "A", "value": "a"},
+          {"title": "B", "value": "b"}
+        ]
+      },
+      {
+        "id": "test2", 
+        "title": "두 번째 테스트",
+        "choices": [
+          {"title": "C", "value": "c"},
+          {"title": "D", "value": "d"}
+        ]
+      }
+    ]
+  },
+  "body": [
+    {
+      "type": "Container",
+      "$data": "${items}",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "${title}"
+        },
+        {
+          "type": "Input.ChoiceSet",
+          "id": "choice_${id}",
+          "choices": "${choices}"
+        },
+        {
+          "type": "ActionSet", 
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Submit",
+              "data": {
+                "itemId": "${id}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
