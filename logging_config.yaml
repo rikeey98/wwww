@@ -1,0 +1,78 @@
+# logging_config.yaml
+# Streamlit 애플리케이션 로깅 설정
+
+# 기본 설정
+default:
+  log_dir: "/var/log/streamlit-app"
+  app_name: "streamlit-app"
+  encoding: "utf-8"
+  
+# 환경별 설정
+environments:
+  development:
+    log_level: "DEBUG"
+    console_output: true
+    file_rotation:
+      max_bytes: 50_000_000  # 50MB
+      backup_count: 10
+    
+  production:
+    log_level: "INFO"
+    console_output: false
+    file_rotation:
+      max_bytes: 100_000_000  # 100MB
+      backup_count: 30
+    system_monitoring:
+      enabled: true
+      interval_seconds: 300  # 5분마다
+
+# 로거별 세부 설정
+loggers:
+  app:
+    filename: "app.log"
+    level: "INFO"
+    format: "detailed"
+    
+  access:
+    filename: "access.log"
+    level: "INFO"
+    format: "access"
+    
+  error:
+    filename: "error.log"
+    level: "ERROR"
+    format: "error"
+    
+  debug:
+    filename: "debug.log"
+    level: "DEBUG"
+    format: "debug"
+    
+  performance:
+    filename: "performance.log"
+    level: "INFO"
+    format: "performance"
+
+# 포맷 정의
+formats:
+  detailed: "%(asctime)s | %(levelname)-8s | %(name)s | %(funcName)s:%(lineno)d | %(message)s"
+  access: "%(asctime)s | ACCESS | %(message)s"
+  error: "%(asctime)s | %(levelname)-8s | %(name)s | %(funcName)s:%(lineno)d | %(message)s"
+  debug: "%(asctime)s | DEBUG | %(name)s | %(funcName)s:%(lineno)d | %(message)s"
+  performance: "%(asctime)s | PERF | %(message)s"
+
+# 보안 설정
+security:
+  mask_sensitive_data: true
+  sensitive_fields:
+    - "password"
+    - "token"
+    - "api_key"
+    - "secret"
+    - "credential"
+  
+# 모니터링 설정
+monitoring:
+  system_stats: true
+  performance_threshold_ms: 5000  # 5초 이상 걸리는 작업 경고
+  error_threshold_count: 10  # 10분내 10회 이상 에러 시 경고
