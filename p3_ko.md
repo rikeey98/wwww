@@ -39,6 +39,18 @@ SoC RTL 검증 워크플로는 설계 사양서와 검증 테스트 케이스 �
                                               │ • 웹 페이지    │
                                               └─────────────────┘
 ```
+```
+flowchart TD
+    A[RTL Design Specs] --> C[Spec Matching Agent]
+    B[Verification Specs] --> C
+    C --> D[Matching Results DB]
+    E[Stakeholder Info DB] --> F[Auto Notification System]
+    G[Historical Matching] --> F
+    D --> F
+    F --> H[Email]
+    F --> I[Internal Msg]
+    F --> J[Web Portal]
+```
 
 ### 2.2 사양서 매칭 에이전트
 
