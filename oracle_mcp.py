@@ -142,31 +142,24 @@ def get_table_structure(table_name: str) -> Dict[str, Any]:
 def execute_select_query(query: str, limit: int = 100) -> Dict[str, Any]:
     """SELECT 쿼리를 실행하고 결과를 반환합니다"""
     try:
-        # 안전성을 위해 SELECT만 허용
         if not query.strip().upper().startswith('SELECT'):
             return {"error": "SELECT 쿼리만 허용됩니다"}
         
-        # LIMIT 추가 (Oracle 12c+ OFFSET/FETCH 또는 ROWNUM 사용)
-        if 'ROWNUM' not in query.upper() and 'FETCH' not in query.upper() and limit > 0:
+        if 'ROWNUM' not in query.upper() and limit > 0:
             query = f"SELECT * FROM ({query}) WHERE ROWNUM <= {limit}"
         
         with get_db_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(query)
             
-            # 컬럼 이름과 타입 정보
-            columns = []
-            for desc in cursor.description:
-                columns.append({
-                    "name": desc[0],
-                    "type": desc[1].__name__ if desc[1] else "UNKNOWN"
-                })
+            # 간단한 컬럼 정보 (이름만)
+            column_names = [desc[0] for desc in cursor.description] if cursor.description else []
             
             # 데이터 가져오기
             rows = cursor.fetchall()
             
             result = {
-                "columns": columns,
+                "columns": column_names,
                 "row_count": len(rows),
                 "data": []
             }
@@ -174,15 +167,14 @@ def execute_select_query(query: str, limit: int = 100) -> Dict[str, Any]:
             for row in rows:
                 row_dict = {}
                 for i, value in enumerate(row):
-                    col_name = columns[i]["name"]
-                    # 다양한 Oracle 데이터 타입 처리
-                    if hasattr(value, 'strftime'):  # DATE, TIMESTAMP
+                    col_name = column_names[i]
+                    
+                    # 간단한 값 변환
+                    if hasattr(value, 'strftime'):  # 날짜
                         row_dict[col_name] = value.strftime('%Y-%m-%d %H:%M:%S')
-                    elif isinstance(value, (int, float)):  # NUMBER
-                        row_dict[col_name] = value
-                    elif value is None:  # NULL
+                    elif value is None:
                         row_dict[col_name] = None
-                    else:  # VARCHAR2, CHAR, CLOB 등
+                    else:
                         row_dict[col_name] = str(value)
                         
                 result["data"].append(row_dict)
