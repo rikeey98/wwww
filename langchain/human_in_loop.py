@@ -1,11 +1,7 @@
-import os
-os.environ["OPENAI_API_KEY"] = "dummy"
-
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 from typing import TypedDict, Literal
 
-# State
 class State(TypedDict):
     task: str
     draft: str
@@ -13,7 +9,6 @@ class State(TypedDict):
     approved: bool
     version: int
 
-# Generate draft
 def generate_draft(state: State) -> State:
     version = state['version'] + 1
     print(f"\n--- Generating Draft v{version} ---")
@@ -24,62 +19,44 @@ def generate_draft(state: State) -> State:
         draft = f"Revised proposal for: {state['task']}\nAddressing: {state['human_feedback']}\n- Updated Point 1\n- Updated Point 2\n- Updated Point 3"
     
     print(f"Draft:\n{draft}")
-    
-    return {
-        "draft": draft,
-        "version": version
-    }
+    return {"draft": draft, "version": version}
 
-# Wait for human approval (interrupt here)
 def human_review(state: State) -> State:
-    print("\n⏸️  Waiting for human review...")
-    print("(This is where the workflow pauses)")
+    print("\n⏸️  Human review node (but already interrupted before this)")
     return {}
 
-# Check approval
 def check_approval(state: State) -> Literal["approved", "revise"]:
-    if state.get('approved', False):
-        return "approved"
-    else:
-        return "revise"
+    return "approved" if state.get('approved', False) else "revise"
 
-# Final node
 def finalize(state: State) -> State:
-    print(f"\n✓ Draft approved! Final version: v{state['version']}")
+    print(f"\n✅ Draft approved! Final version: v{state['version']}")
     return {}
 
-# Build Graph
+# Build graph
 graph = StateGraph(State)
-
-graph.add_node("generate", generate_draft)
+graph.add_node("draft", generate_draft)
 graph.add_node("review", human_review)
 graph.add_node("finalize", finalize)
 
-graph.set_entry_point("generate")
-graph.add_edge("generate", "review")
-
-graph.add_conditional_edges(
-    "review",
-    check_approval,
-    {
-        "approved": "finalize",
-        "revise": "generate"  # Loop back
-    }
-)
-
+graph.set_entry_point("draft")
+graph.add_edge("draft", "review")
+graph.add_conditional_edges("review", check_approval, {"approved": "finalize", "revise": "draft"})
 graph.add_edge("finalize", END)
 
-# Compile with checkpointer and interrupt
+# Compile with interrupt
 memory = MemorySaver()
 app = graph.compile(
     checkpointer=memory,
-    interrupt_before=["review"]  # Pause before review!
+    interrupt_before=["review"]  # review 직전에 멈춤
 )
 
-config = {"configurable": {"thread_id": "human-1"}}
+config = {"configurable": {"thread_id": "demo"}}
 
-# Step 1: Start workflow
-print("=== Step 1: Start Workflow ===")
+# ===== Step 1: Initial run (멈을 때까지 실행) =====
+print("=" * 50)
+print("STEP 1: Initial Draft Generation")
+print("=" * 50)
+
 result = app.invoke(
     {
         "task": "New feature proposal",
@@ -91,47 +68,72 @@ result = app.invoke(
     config=config
 )
 
-print("\n🛑 Workflow paused for human review")
-print(f"Current draft:\n{result['draft']}")
+# ===== Step 2: Check state (멈춘 상태 확인) =====
+print("\n" + "=" * 50)
+print("STEP 2: Execution Paused - Check State")
+print("=" * 50)
 
-# Simulate human review
-print("\n=== Human Reviews Draft ===")
-print("Options:")
-print("1. Approve")
-print("2. Request changes")
+current = app.get_state(config)
+print(f"\n📄 Current Draft:")
+print(current.values['draft'])
+print(f"\n⏭️  Next node to execute: {current.next}")
 
-# Simulate: Request changes
-print("\nHuman decision: Request changes")
-print("Feedback: Please add more details")
+# ===== Step 3: Human decision =====
+print("\n" + "=" * 50)
+print("STEP 3: Human Decision")
+print("=" * 50)
 
-# Step 2: Update state with human feedback
-current_state = app.get_state(config)
-app.update_state(
-    config,
-    {
-        "human_feedback": "Please add more details",
-        "approved": False
-    }
-)
+choice = input("\n👤 Approve this draft? (yes/no): ").strip().lower()
 
-# Step 3: Resume workflow
-print("\n=== Step 2: Resume Workflow ===")
-result = app.invoke(None, config=config)  # Continue from checkpoint
+if choice == "yes":
+    print("\n✅ Approving draft...")
+    app.update_state(config, {"approved": True})
+else:
+    print("\n❌ Rejecting draft - requesting revision...")
+    feedback = input("💬 Enter your feedback: ").strip()
+    app.update_state(config, {
+        "approved": False,
+        "human_feedback": feedback or "Please improve"
+    })
 
-print("\n🛑 Workflow paused again for review")
-print(f"Updated draft:\n{result['draft']}")
+# ===== Step 4: Resume execution =====
+print("\n" + "=" * 50)
+print("STEP 4: Resuming Execution")
+print("=" * 50)
 
-# Simulate: Approve this time
-print("\n=== Human Reviews Again ===")
-print("Human decision: Approve")
-
-app.update_state(
-    config,
-    {"approved": True}
-)
-
-# Step 4: Final resume
-print("\n=== Step 3: Final Resume ===")
 result = app.invoke(None, config=config)
 
-print("\n✓ Workflow completed!")
+# Check if we need another round
+current = app.get_state(config)
+if current.next:  # Still has next node (멈춤)
+    print("\n⏸️  Execution paused again!")
+    print(f"📄 Revised Draft:")
+    print(current.values['draft'])
+    
+    choice2 = input("\n👤 Approve this revised draft? (yes/no): ").strip().lower()
+    
+    if choice2 == "yes":
+        app.update_state(config, {"approved": True})
+    else:
+        feedback2 = input("💬 Enter feedback: ").strip()
+        app.update_state(config, {
+            "approved": False,
+            "human_feedback": feedback2 or "Please improve more"
+        })
+    
+    print("\n" + "=" * 50)
+    print("Resuming again...")
+    print("=" * 50)
+    result = app.invoke(None, config=config)
+
+# ===== Final State =====
+print("\n" + "=" * 50)
+print("FINAL STATE")
+print("=" * 50)
+
+final = app.get_state(config)
+print(f"\n📋 Task: {final.values['task']}")
+print(f"📄 Final Draft:")
+print(final.values['draft'])
+print(f"🔢 Version: v{final.values['version']}")
+print(f"✅ Approved: {final.values['approved']}")
