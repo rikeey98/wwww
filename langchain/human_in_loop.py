@@ -22,7 +22,7 @@ def generate_draft(state: State) -> State:
     return {"draft": draft, "version": version}
 
 def human_review(state: State) -> State:
-    print("\n⏸️  Human review node (but already interrupted before this)")
+    print("\n⏸️  Human review node")
     return {}
 
 def check_approval(state: State) -> Literal["approved", "revise"]:
@@ -47,14 +47,14 @@ graph.add_edge("finalize", END)
 memory = MemorySaver()
 app = graph.compile(
     checkpointer=memory,
-    interrupt_before=["review"]  # review 직전에 멈춤
+    interrupt_before=["review"]
 )
 
 config = {"configurable": {"thread_id": "demo"}}
 
-# ===== Step 1: Initial run (멈을 때까지 실행) =====
+# ===== Initial run =====
 print("=" * 50)
-print("STEP 1: Initial Draft Generation")
+print("Initial Draft Generation")
 print("=" * 50)
 
 result = app.invoke(
@@ -68,62 +68,38 @@ result = app.invoke(
     config=config
 )
 
-# ===== Step 2: Check state (멈춘 상태 확인) =====
-print("\n" + "=" * 50)
-print("STEP 2: Execution Paused - Check State")
-print("=" * 50)
-
-current = app.get_state(config)
-print(f"\n📄 Current Draft:")
-print(current.values['draft'])
-print(f"\n⏭️  Next node to execute: {current.next}")
-
-# ===== Step 3: Human decision =====
-print("\n" + "=" * 50)
-print("STEP 3: Human Decision")
-print("=" * 50)
-
-choice = input("\n👤 Approve this draft? (yes/no): ").strip().lower()
-
-if choice == "yes":
-    print("\n✅ Approving draft...")
-    app.update_state(config, {"approved": True})
-else:
-    print("\n❌ Rejecting draft - requesting revision...")
-    feedback = input("💬 Enter your feedback: ").strip()
-    app.update_state(config, {
-        "approved": False,
-        "human_feedback": feedback or "Please improve"
-    })
-
-# ===== Step 4: Resume execution =====
-print("\n" + "=" * 50)
-print("STEP 4: Resuming Execution")
-print("=" * 50)
-
-result = app.invoke(None, config=config)
-
-# Check if we need another round
-current = app.get_state(config)
-if current.next:  # Still has next node (멈춤)
-    print("\n⏸️  Execution paused again!")
-    print(f"📄 Revised Draft:")
+# ===== Loop until approved =====
+while True:
+    current = app.get_state(config)
+    
+    # Check if finished
+    if not current.next:
+        print("\n✅ Workflow completed!")
+        break
+    
+    # Show current draft
+    print("\n" + "=" * 50)
+    print(f"Draft v{current.values['version']}")
+    print("=" * 50)
+    print(f"\n📄 Current Draft:")
     print(current.values['draft'])
     
-    choice2 = input("\n👤 Approve this revised draft? (yes/no): ").strip().lower()
+    # Get human decision
+    choice = input("\n👤 Approve this draft? (yes/no): ").strip().lower()
     
-    if choice2 == "yes":
+    if choice == "yes":
+        print("\n✅ Approving draft...")
         app.update_state(config, {"approved": True})
     else:
-        feedback2 = input("💬 Enter feedback: ").strip()
+        print("\n❌ Requesting revision...")
+        feedback = input("💬 Enter your feedback: ").strip()
         app.update_state(config, {
             "approved": False,
-            "human_feedback": feedback2 or "Please improve more"
+            "human_feedback": feedback or "Please improve"
         })
     
-    print("\n" + "=" * 50)
-    print("Resuming again...")
-    print("=" * 50)
+    # Resume execution
+    print("\n⏩ Resuming...")
     result = app.invoke(None, config=config)
 
 # ===== Final State =====
