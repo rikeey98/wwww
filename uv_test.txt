@@ -1,4 +1,17 @@
-# uv/파이썬/프록시/인증서 관련 환경변수만 추려서 저장
+$pattern = '^(UV_|PIP_|PYTHON|VIRTUAL_ENV$|CONDA|HTTP_PROXY$|HTTPS_PROXY$|ALL_PROXY$|NO_PROXY$|REQUESTS_CA_BUNDLE$|SSL_CERT_FILE$|SSL_CERT_DIR$|CURL_CA_BUNDLE$|PATH$)'
+
+Get-ChildItem Env: |
+  Where-Object { $_.Name -match $pattern } |
+  Sort-Object Name |
+  ForEach-Object { "{0}={1}" -f $_.Name, $_.Value } |
+  Set-Content -Encoding UTF8 .\env_windows_uv.txt
+
+# 확인
+Get-Item .\env_windows_uv.txt
+Get-Content .\env_windows_uv.txt | Select-Object -First 30
+
+
+???
 $keys = @(
   '^UV_',
   '^PIP_',
@@ -11,15 +24,16 @@ $keys = @(
 )
 
 Get-ChildItem Env: |
-  Where-Object { $keys | ForEach-Object { $_ } | Where-Object { $_ -and ($_.Length -gt 0) } | ForEach-Object { $pattern=$_; if ($_.Name -match $pattern) { $true } } | Select-Object -First 1 } |
+  Where-Object {
+    $name = $_.Name
+    $keys | Where-Object { $name -match $_ } | Select-Object -First 1
+  } |
   Sort-Object Name |
   ForEach-Object { "{0}={1}" -f $_.Name, $_.Value } |
   Set-Content -Encoding UTF8 .\env_windows_uv.txt
 
-# uv가 실제로 어떤 python을 쓰려는지(가능하면) 확인 로그
-uv --version 2>$null
-uv python find 2>$null
-uv config list 2>$null
+# 확인
+Get-Item .\env_windows_uv.txt
 
 
 --------------------------------------------------------------------------------------
