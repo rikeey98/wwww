@@ -1,0 +1,47 @@
+# uv/파이썬/프록시/인증서 관련 환경변수만 추려서 저장
+$keys = @(
+  '^UV_',
+  '^PIP_',
+  '^PYTHON',
+  '^VIRTUAL_ENV$',
+  '^CONDA',
+  '^HTTP_PROXY$','^HTTPS_PROXY$','^ALL_PROXY$','^NO_PROXY$',
+  '^REQUESTS_CA_BUNDLE$','^SSL_CERT_FILE$','^SSL_CERT_DIR$','^CURL_CA_BUNDLE$',
+  '^PATH$'
+)
+
+Get-ChildItem Env: |
+  Where-Object { $keys | ForEach-Object { $_ } | Where-Object { $_ -and ($_.Length -gt 0) } | ForEach-Object { $pattern=$_; if ($_.Name -match $pattern) { $true } } | Select-Object -First 1 } |
+  Sort-Object Name |
+  ForEach-Object { "{0}={1}" -f $_.Name, $_.Value } |
+  Set-Content -Encoding UTF8 .\env_windows_uv.txt
+
+# uv가 실제로 어떤 python을 쓰려는지(가능하면) 확인 로그
+uv --version 2>$null
+uv python find 2>$null
+uv config list 2>$null
+
+
+--------------------------------------------------------------------------------------
+# uv/파이썬/프록시/인증서 관련 환경변수만 추려서 저장
+{
+  echo "### ENV (filtered)"
+  env | egrep -i '^(UV_|PIP_|PYTHON|VIRTUAL_ENV=|CONDA|HTTP_PROXY=|HTTPS_PROXY=|ALL_PROXY=|NO_PROXY=|REQUESTS_CA_BUNDLE=|SSL_CERT_FILE=|SSL_CERT_DIR=|CURL_CA_BUNDLE=|PATH=)' | sort
+
+  echo
+  echo "### uv"
+  command -v uv || true
+  uv --version || true
+  uv python find || true
+  uv config list || true
+
+  echo
+  echo "### python"
+  command -v python3 || true
+  python3 --version || true
+
+  echo
+  echo "### cert store (common)"
+  ls -l /etc/ssl/certs/ca-certificates.crt 2>/dev/null || true
+  ls -l /usr/local/share/ca-certificates 2>/dev/null || true
+} > env_wsl_uv.txt
