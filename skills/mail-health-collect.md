@@ -14,9 +14,12 @@ Collect mail-sender health metrics from `antsdb.ants_email` using the DB MCP and
 - 아래 쿼리들은 모두 **단일 값(1 row)** 을 반환해야 합니다.
 
 # Queries (Oracle)
+아래 **0~6번 쿼리는 모두 필수 실행**입니다. 하나라도 실행하지 않으면 실패로 간주하고 JSON을 반환하지 마세요.
+특히 **0) now_kst는 반드시 먼저 실행**하고, ts는 그 값을 그대로 사용하세요. 시간은 절대 생성/추측하지 마세요.
+
 아래 순서대로 실행하고 결과 숫자/문자열을 모으세요.
 
-0) now_kst (KST 현재 시각)
+0) now_kst (KST 현재 시각) — 필수
 ```sql
 SELECT TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul',
                'YYYY-MM-DD"T"HH24:MI:SS') AS now_kst
@@ -67,6 +70,11 @@ FROM ants_email
 WHERE create_date >= SYSDATE - (15/(24*60))
   AND send_flag = 'N';
 ```
+
+검증 규칙:
+- now_kst 값이 없으면 즉시 실패.
+- ts 필드는 반드시 now_kst와 동일해야 함.
+- ts를 생성하거나 현재 시간을 추측하면 안 됨.
 
 # Derive status (deterministic rules)
 아래는 코드/에이전트가 **룰로** 계산하세요.
