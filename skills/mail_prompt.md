@@ -43,3 +43,9 @@
 
 중 뭐가 나오는지 알려줘.
 그다음 바로 래퍼 스킬로 깔끔하게 묶어버리자.
+
+
+## 한줄짜리 
+```
+run-daily-health-report를 slot="morning", window_hours=6, base_dir="Reports/Daily"로 실행해.
+```
