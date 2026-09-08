@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>AI 네이티브 SDLC 플레이북 — 한국어 재구성</title>
+  <meta name="description" content="AI 네이티브 소프트웨어 개발 라이프사이클을 6단계로 이해하는 비공식 한국어 재구성 페이지" />
+  <style>
+    :root {
+      --paper: #f5f0e8;
+      --paper-2: #eee6da;
+      --ink: #171512;
+      --muted: #6c665d;
+      --line: #cec4b7;
+      --line-dark: #a99e91;
+      --accent: #d8673f;
+      --accent-deep: #a84528;
+      --clay: #d7a97d;
+      --green: #748a74;
+      --yellow: #dfb86a;
+      --blue: #7c93a8;
+      --violet: #8d7f95;
+      --white: #fffdf8;
+      --shadow: 0 22px 60px rgba(33, 24, 16, 0.10);
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --serif: Georgia, "Times New Roman", "Noto Serif KR", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      line-height: 1.72;
+      letter-spacing: -0.01em;
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      padding: 0 28px;
+      background: color-mix(in srgb, var(--paper) 88%, transparent);
+      border-bottom: 1px solid rgba(23, 21, 18, 0.12);
+      backdrop-filter: blur(14px);
+    }
+    .brand {
+      display: flex;
+      white-space: nowrap;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: -0.03em;
+    }
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--ink);
+      border-radius: 50% 44% 52% 46%;
+      display: grid;
+      place-items: center;
+      transform: rotate(-7deg);
+      background: var(--paper-2);
+      font-family: var(--serif);
+      font-style: italic;
+    }
+    .header-nav {
+      display: flex;
+      white-space: nowrap;
+      flex-shrink: 0;
+      gap: 24px;
+      align-items: center;
+      font-size: 14px;
+    }
+    .header-nav a { text-decoration: none; }
+    .header-cta {
+      border: 1px solid var(--ink);
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .hero {
+      padding: 72px max(28px, calc((100vw - 1240px) / 2)) 64px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 24px;
+    }
+    .eyebrow .pill {
+      border: 1px solid var(--line-dark);
+      border-radius: 999px;
+      padding: 5px 9px;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--ink);
+      background: rgba(255,255,255,.22);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr);
+      gap: 54px;
+      align-items: end;
+    }
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-family: var(--serif);
+      font-size: clamp(52px, 7.2vw, 108px);
+      font-weight: 400;
+      line-height: .95;
+      letter-spacing: -0.055em;
+    }
+    .hero-deck {
+      margin: 28px 0 0;
+      max-width: 780px;
+      font-size: clamp(20px, 2.1vw, 31px);
+      line-height: 1.35;
+      letter-spacing: -0.035em;
+    }
+    .hero-meta {
+      border-top: 1px solid var(--line-dark);
+      padding-top: 18px;
+      display: grid;
+      gap: 14px;
+      font-size: 14px;
+    }
+    .meta-row {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 10px;
+    }
+    .meta-row span:first-child { color: var(--muted); }
+    .notice {
+      margin-top: 42px;
+      border: 1px solid var(--line-dark);
+      border-left: 4px solid var(--accent);
+      background: rgba(255, 253, 248, .45);
+      padding: 16px 18px;
+      font-size: 14px;
+      color: #4b463f;
+    }
+
+    .page-shell {
+      width: min(1240px, calc(100% - 48px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 70px;
+      padding: 54px 0 120px;
+    }
+    .toc-wrap { align-self: start; position: sticky; top: 94px; }
+    .toc-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    .toc-toggle { display: none; }
+    .toc {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--line);
+    }
+    .toc li { border-bottom: 1px solid var(--line); }
+    .toc a {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 6px;
+      padding: 10px 0;
+      text-decoration: none;
+      font-size: 13px;
+      color: var(--muted);
+      transition: color .18s ease, transform .18s ease;
+    }
+    .toc a:hover, .toc a.active { color: var(--ink); transform: translateX(3px); }
+    .toc a.active { font-weight: 650; }
+
+    main { min-width: 0; }
+    .article-section {
+      scroll-margin-top: 92px;
+      padding: 14px 0 78px;
+      border-bottom: 1px solid var(--line);
+    }
+    .article-section + .article-section { padding-top: 74px; }
+    h2, h3, h4 { letter-spacing: -0.035em; }
+    h2 {
+      margin: 0 0 26px;
+      font-family: var(--serif);
+      font-size: clamp(40px, 5.1vw, 74px);
+      line-height: 1.02;
+      font-weight: 400;
+    }
+    h3 {
+      margin: 42px 0 14px;
+      font-size: clamp(24px, 2.6vw, 36px);
+      line-height: 1.15;
+    }
+    h4 {
+      margin: 30px 0 10px;
+      font-size: 17px;
+    }
+    p { margin: 0 0 18px; }
+    .lede {
+      max-width: 850px;
+      font-size: clamp(21px, 2.25vw, 31px);
+      line-height: 1.45;
+      letter-spacing: -0.03em;
+    }
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-kicker::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--muted);
+    }
+    .prose { max-width: 840px; }
+    .prose ul, .prose ol { padding-left: 23px; }
+    .prose li { margin-bottom: 8px; }
+
+    .bottleneck {
+      margin: 42px 0 18px;
+      padding: 26px;
+      border: 1px solid var(--line-dark);
+      background: #ece3d7;
+    }
+    .bottleneck-title { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .phase-row {
+      display: grid;
+      grid-template-columns: 88px 1fr 68px;
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+    .bar-track {
+      height: 24px;
+      background: rgba(23,21,18,.07);
+      overflow: hidden;
+    }
+    .bar {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 11px;
+      background: var(--clay);
+    }
+    .bar.plan { width: 72%; }
+    .bar.build { width: 18%; background: var(--accent); color: #fff; }
+    .bar.test { width: 68%; }
+    .bar.deploy { width: 55%; }
+
+    .callout-grid {
+      margin: 34px 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .callout {
+      min-height: 160px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.22);
+      padding: 18px;
+    }
+    .callout .num {
+      font-family: var(--serif);
+      font-size: 38px;
+      line-height: 1;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .callout strong { display: block; margin-bottom: 7px; }
+    .callout p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    .comparison {
+      overflow-x: auto;
+      margin: 34px 0;
+      border: 1px solid var(--line-dark);
+      background: rgba(255,255,255,.18);
+    }
+    .comparison table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      font-size: 14px;
+    }
+    .comparison th, .comparison td {
+      padding: 16px 18px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      text-align: left;
+    }
+    .comparison th:last-child, .comparison td:last-child { border-right: 0; }
+    .comparison tr:last-child td { border-bottom: 0; }
+    .comparison th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .comparison td:first-child { width: 100px; font-weight: 700; }
+    .comparison td:nth-child(3) { background: rgba(216,103,63,.055); }
+
+    .loop-card {
+      margin: 38px 0;
+      padding: 28px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .loop-caption { color: #bfb7ac; font-size: 13px; margin-bottom: 20px; }
+    .artifact-loop {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(92px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+    .artifact {
+      position: relative;
+      min-height: 92px;
+      border: 1px solid #625c54;
+      background: #25221e;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .artifact b { font-size: 13px; }
+    .artifact span { font-size: 11px; color: #aaa195; }
+    .artifact:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -13px;
+      top: 32px;
+      color: var(--accent);
+      font-size: 20px;
+      z-index: 2;
+    }
+    .loop-return {
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #5a544d;
+      text-align: center;
+      color: #d4cbc0;
+      font-size: 13px;
+    }
+    .loop-return strong { color: #f18b65; }
+
+    .plays-intro {
+      display: grid;
+      grid-template-columns: 1fr .9fr;
+      gap: 34px;
+      align-items: start;
+    }
+    .dependency-map {
+      border: 1px solid var(--line-dark);
+      background: #eadfce;
+      padding: 22px;
+      min-height: 330px;
+    }
+    .dep-stage {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(23,21,18,.14);
+    }
+    .dep-stage:last-child { border-bottom: 0; }
+    .dep-stage .dot {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      background: var(--paper);
+    }
+    .dep-stage b { display: block; font-size: 14px; }
+    .dep-stage small { color: var(--muted); }
+
+    .stage-head {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-bottom: 30px;
+    }
+    .stage-number {
+      font-family: var(--serif);
+      font-size: 84px;
+      line-height: .85;
+      color: var(--accent);
+      letter-spacing: -.07em;
+    }
+    .stage-title h2 { margin-bottom: 12px; }
+    .stage-title p { font-size: 20px; max-width: 760px; color: #3f3a34; }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--line-dark);
+      margin: 28px 0 40px;
+    }
+    .ba-col { padding: 22px; min-height: 180px; }
+    .ba-col + .ba-col { border-left: 1px solid var(--line-dark); background: rgba(216,103,63,.07); }
+    .ba-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .ba-col p { margin: 0; font-size: 15px; }
+
+    .steps {
+      counter-reset: step;
+      margin: 18px 0 32px;
+      border-top: 1px solid var(--line-dark);
+    }
+    .step {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .step::before {
+      content: counter(step, decimal-leading-zero);
+      font-family: var(--serif);
+      font-size: 21px;
+      color: var(--accent);
+    }
+    .step b { display: block; margin-bottom: 4px; }
+    .step span { color: #514b43; font-size: 15px; }
+
+    .artifact-example {
+      position: relative;
+      margin: 24px 0 34px;
+      border: 1px solid #2c2924;
+      background: #1f1d1a;
+      color: #f6efe5;
+      overflow: hidden;
+    }
+    .artifact-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid #3c3731;
+      background: #27231f;
+      font-size: 12px;
+      color: #c6bdb2;
+    }
+    .copy-btn {
+      border: 1px solid #5b534a;
+      color: #e9e1d7;
+      background: transparent;
+      border-radius: 999px;
+      padding: 5px 9px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { border-color: #a49a8f; }
+    pre {
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.65;
+      white-space: pre;
+    }
+
+    .governance {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 30px 0 10px;
+    }
+    .gov-card {
+      border-top: 2px solid var(--ink);
+      padding: 14px 4px 0;
+    }
+    .gov-card h4 { margin-top: 0; }
+    .gov-card p { color: var(--muted); font-size: 14px; }
+
+    .metrics {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      padding: 18px;
+      background: rgba(255,255,255,.18);
+    }
+    .metric small { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .metric b { display: block; margin: 7px 0 5px; }
+    .metric p { margin: 0; font-size: 14px; color: var(--muted); }
+
+    .note-box {
+      margin: 28px 0;
+      padding: 20px;
+      border: 1px dashed var(--line-dark);
+      background: #eee3d3;
+    }
+    .note-box strong { display: block; margin-bottom: 7px; }
+    .note-box p:last-child { margin-bottom: 0; }
+
+    .closing-quote {
+      margin: 42px 0;
+      padding: 42px 0 18px;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      font-family: var(--serif);
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+    }
+
+    footer {
+      border-top: 1px solid var(--line-dark);
+      padding: 34px max(28px, calc((100vw - 1240px) / 2)) 58px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer a { color: var(--ink); }
+
+    @media (max-width: 980px) {
+      .header-nav a:not(.header-cta) { display: none; }
+      .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+      .hero-meta { max-width: 440px; }
+      .page-shell { grid-template-columns: 1fr; gap: 26px; padding-top: 26px; }
+      .toc-wrap {
+        position: sticky;
+        top: 76px;
+        z-index: 30;
+        background: var(--paper);
+        border: 1px solid var(--line-dark);
+        padding: 12px 14px;
+      }
+      .toc-title { margin: 0; }
+      .toc-toggle {
+        display: inline-flex;
+        border: 0;
+        background: transparent;
+        padding: 4px 0;
+        cursor: pointer;
+      }
+      .toc { display: none; margin-top: 10px; }
+      .toc.open { display: block; }
+      .callout-grid { grid-template-columns: 1fr; }
+      .plays-intro { grid-template-columns: 1fr; }
+      .artifact-loop { grid-template-columns: repeat(2, 1fr); }
+      .artifact:not(:last-child)::after { display: none; }
+    }
+
+    @media (max-width: 700px) {
+      .site-header { height: 60px; padding: 0 16px; }
+      .brand span:last-child { display: none; }
+      .hero { padding: 46px 18px 44px; }
+      .page-shell { width: min(100% - 28px, 1240px); padding-bottom: 72px; }
+      h1 { font-size: clamp(46px, 15.2vw, 74px); }
+      .hero-deck { font-size: 20px; }
+      .article-section { padding-bottom: 58px; }
+      .article-section + .article-section { padding-top: 58px; }
+      .stage-head { grid-template-columns: 1fr; gap: 10px; }
+      .stage-number { font-size: 60px; }
+      .before-after, .governance, .metrics { grid-template-columns: 1fr; }
+      .ba-col + .ba-col { border-left: 0; border-top: 1px solid var(--line-dark); }
+      .artifact-loop { grid-template-columns: 1fr; }
+      .artifact { min-height: 76px; }
+      .phase-row { grid-template-columns: 72px 1fr 50px; gap: 8px; }
+      .loop-card { padding: 18px; }
+      .comparison th, .comparison td { padding: 13px; }
+      footer { grid-template-columns: 1fr; padding: 28px 18px 44px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="페이지 맨 위로">
+      <span class="brand-mark">A</span>
+      <span>AI Native SDLC</span>
+    </a>
+    <nav class="header-nav" aria-label="상단 링크">
+      <a href="#ai-native">개념</a>
+      <a href="#plays">6단계</a>
+      <a href="#closing">마무리</a>
+      <a class="header-cta" href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noreferrer">원문 보기 ↗</a>
+    </nav>
+  </header>
+
+  <div id="top" class="hero">
+    <div class="eyebrow">
+      <span class="pill">Enterprise AI</span>
+      <span class="pill">Claude Code</span>
+      <span>비공식 한국어 재구성</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>AI 네이티브<br />SDLC 플레이북</h1>
+        <p class="hero-deck">AI가 코드를 더 빨리 쓰는 데서 끝나지 않고, 계획·설계·테스트·배포·운영까지 전체 개발 생명주기를 다시 짜는 방법.</p>
+      </div>
+      <div class="hero-meta" aria-label="문서 정보">
+        <div class="meta-row"><span>원문</span><strong>The AI-Native SDLC playbook</strong></div>
+        <div class="meta-row"><span>저자</span><strong>Louis Claxton</strong></div>
+        <div class="meta-row"><span>원문 공개</span><strong>2026. 08. 21.</strong></div>
+        <div class="meta-row"><span>구성</span><strong>6 stages · loop-based workflow</strong></div>
+      </div>
+    </div>
+    <div class="notice">
+      이 페이지는 원문을 문장 단위로 번역한 공식 번역본이 아니라, 핵심 논지와 실무 구조를 한국어로 상세히 재서술한 학습용 페이지입니다. 원문 이미지도 복제하지 않고 새 도식으로 구성했습니다.
+    </div>
+  </div>
+
+  <div class="page-shell">
+    <aside class="toc-wrap" aria-label="목차">
+      <div class="toc-title">
+        <span>Contents</span>
+        <button class="toc-toggle" type="button" aria-expanded="false" aria-controls="toc-list">목차 열기</button>
+      </div>
+      <ol id="toc-list" class="toc">
+        <li><a href="#intro"><span>01</span><span>코드 이후의 병목</span></a></li>
+        <li><a href="#ai-native"><span>02</span><span>AI-native SDLC</span></a></li>
+        <li><a href="#plays"><span>03</span><span>Plays</span></a></li>
+        <li><a href="#plan"><span>04</span><span>Stage 1 · Plan</span></a></li>
+        <li><a href="#design"><span>05</span><span>Stage 2 · Design</span></a></li>
+        <li><a href="#build"><span>06</span><span>Stage 3 · Build</span></a></li>
+        <li><a href="#test"><span>07</span><span>Stage 4 · Test</span></a></li>
+        <li><a href="#deploy"><span>08</span><span>Stage 5 · Deploy</span></a></li>
+        <li><a href="#maintain"><span>09</span><span>Stage 6 · Maintain</span></a></li>
+        <li><a href="#closing"><span>10</span><span>Closing</span></a></li>
+      </ol>
+    </aside>
+
+    <main>
+      <section id="intro" class="article-section">
+        <div class="section-kicker">Why the lifecycle changes</div>
+        <h2>코드는 더 이상<br />가장 느린 단계가 아니다</h2>
+        <div class="prose">
+          <p class="lede">에이전트형 코딩 도구가 구현 속도를 크게 끌어올리면서, 오히려 계획·검토·승인·배포처럼 사람이 중심이던 주변 단계가 새 병목이 되기 시작한다.</p>
+          <p>전통적인 SDLC는 코드 작성이 오래 걸리고 비용이 많이 들던 시대에 맞춰 설계되었다. 제품 요구사항 문서, 추정 회의, 보안 검토, 단계별 승인 절차는 긴 개발 기간 동안 정렬과 책임 소재를 지키기 위한 장치였다.</p>
+          <p>하지만 구현이 몇 주에서 몇 시간으로 압축되면 균형이 바뀐다. 사람이 직접 모든 변경 줄을 읽고, 정해진 회의 주기에 맞춰 예외를 승인하는 방식은 에이전트의 생산량을 따라가기 어렵다. 따라서 AI를 코드 작성자에만 붙이는 것이 아니라 <strong>SDLC 자체를 AI가 읽고 움직일 수 있는 구조</strong>로 바꿔야 한다.</p>
+        </div>
+
+        <div class="bottleneck" aria-label="빌드 병목 변화 도식">
+          <div class="bottleneck-title">구현 시간이 급격히 줄어든 뒤의 상대적 병목</div>
+          <div class="phase-row"><span>Plan</span><div class="bar-track"><div class="bar plan">human-speed</div></div><span>느림</span></div>
+          <div class="phase-row"><span>Build</span><div class="bar-track"><div class="bar build">AI</div></div><span>빠름</span></div>
+          <div class="phase-row"><span>Test</span><div class="bar-track"><div class="bar test">human-speed</div></div><span>느림</span></div>
+          <div class="phase-row"><span>Deploy</span><div class="bar-track"><div class="bar deploy">human-speed</div></div><span>느림</span></div>
+        </div>
+
+        <div class="callout-grid">
+          <div class="callout"><div class="num">1</div><strong>병목이 양옆으로 이동</strong><p>Build가 빨라지면 Plan, Review/Test, Deploy가 전체 리드타임을 결정한다.</p></div>
+          <div class="callout"><div class="num">2</div><strong>기존 통제가 맞지 않음</strong><p>사람이 작성한 diff를 전제로 한 수동 검토 방식은 에이전트 생산량에서 비용이 폭증한다.</p></div>
+          <div class="callout"><div class="num">3</div><strong>거버넌스 비용 증가</strong><p>정책 예외가 여전히 주간·월간 회의로만 처리되면 빠른 구현이 오히려 대기열을 만든다.</p></div>
+        </div>
+      </section>
+
+      <section id="ai-native" class="article-section">
+        <div class="section-kicker">From pipeline to loop</div>
+        <h2>AI-native SDLC란?</h2>
+        <div class="prose">
+          <p class="lede">핵심은 “통제를 없애는 것”이 아니라, 기존 통제 목적을 유지하면서도 AI 속도에 맞게 집행 방식을 바꾸는 것이다.</p>
+          <p>선형 핸드오프 대신 각 단계가 다음 단계가 바로 읽을 수 있는 아티팩트를 남긴다. 요구를 정리한 <code>intent.md</code>, 설계를 담은 <code>spec.md</code>, 구현 계획인 <code>plan.md</code>, 코드와 테스트, PR 검토 결과, 운영 사고 기록이 연결된다.</p>
+          <p>이 연결고리 자체가 추적 가능한 감사 기록이 된다. 사람이 판단해야 하는 지점은 그대로 남지만, 사람은 매 단계의 문서를 처음부터 다시 작성하는 대신 에이전트가 만든 결과와 위험 신호를 검토하는 역할에 더 집중하게 된다.</p>
+        </div>
+
+        <div class="comparison">
+          <table>
+            <thead>
+              <tr><th>Stage</th><th>전통적 SDLC</th><th>AI-native SDLC</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Plan</td><td>워크숍과 티켓, 회의, 수동 문서화를 거쳐 요구사항을 정리한다.</td><td>아이디어와 문제를 원천에서 바로 정리해 <code>intent.md</code>라는 인간·기계 공용 아티팩트로 남긴다.</td></tr>
+              <tr><td>Design</td><td>분석가와 디자이너가 각자 문서를 만들며 단계 사이에서 해석 손실이 생긴다.</td><td>조직의 보안·브랜드·UX 규칙을 Skill로 적용하면서 요구와 설계를 한 세션에서 압축한다.</td></tr>
+              <tr><td>Build</td><td>구현 방법이 엔지니어 머릿속에 머무르고 문서는 뒤늦게 작성되기 쉽다.</td><td><code>plan.md</code>, <code>CLAUDE.md</code>, Skills를 통해 계획과 팀 지식을 버전 관리 가능한 형태로 만든다.</td></tr>
+              <tr><td>Test</td><td>단계 경계에서 QA가 몰아서 검증한다.</td><td>구현 중 검증과 CI 평가(evals)를 지속적으로 실행한다.</td></tr>
+              <tr><td>Deploy</td><td>모든 변경을 사람이 일일이 살펴보고 승인 주기마다 정책을 확인한다.</td><td>다층 에이전트 검토와 Hook을 사용해 정책을 실행 시점에 강제하고, 사람은 중요한 승인에 집중한다.</td></tr>
+              <tr><td>Maintain</td><td>운영 담당자가 지표와 장애를 감시하고 이슈를 다시 개발팀에 전달한다.</td><td>에이전트가 이상을 진단하고 결과를 다시 <code>intent.md</code> 또는 작은 PR로 되돌려 루프를 닫는다.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="loop-card">
+          <div class="loop-caption">각 단계는 다음 단계가 읽을 수 있는 “커밋된 아티팩트”를 남긴다.</div>
+          <div class="artifact-loop">
+            <div class="artifact"><b>intent.md</b><span>왜 필요한가</span></div>
+            <div class="artifact"><b>spec.md</b><span>무엇을 만들까</span></div>
+            <div class="artifact"><b>plan.md</b><span>어떻게 바꿀까</span></div>
+            <div class="artifact"><b>code + tests</b><span>실제 변경</span></div>
+            <div class="artifact"><b>PR review</b><span>위험·정책 확인</span></div>
+            <div class="artifact"><b>deploy</b><span>실서비스 반영</span></div>
+            <div class="artifact"><b>incident</b><span>운영 신호</span></div>
+          </div>
+          <div class="loop-return">운영에서 새 문제가 생기면 <strong>incident → intent.md</strong>로 돌아가 다음 사이클을 시작한다.</div>
+        </div>
+      </section>
+
+      <section id="plays" class="article-section">
+        <div class="section-kicker">The plays</div>
+        <h2>6개 단계는 순서가 아니라<br />연결된 플레이들이다</h2>
+        <div class="plays-intro">
+          <div class="prose">
+            <p class="lede">각 플레이는 “무엇이 달라지는가 → 어떻게 시작하는가 → 어떻게 실행하는가 → 무엇을 통제하고 측정하는가”의 구조로 생각할 수 있다.</p>
+            <p>모든 조직이 Stage 1부터 완벽히 적용할 필요는 없다. 이미 CI가 잘 갖춰져 있다면 Test나 Deploy부터 개선할 수도 있다. 중요한 것은 각 플레이가 의존하는 앞단 아티팩트를 명확히 하고, 단계가 끝날 때 결과를 다음 단계가 읽을 수 있게 남기는 것이다.</p>
+          </div>
+          <div class="dependency-map" aria-label="6단계 요약">
+            <div class="dep-stage"><div class="dot">1</div><div><b>Plan</b><small>문제를 intent.md로 고정</small></div></div>
+            <div class="dep-stage"><div class="dot">2</div><div><b>Design</b><small>규칙을 적용해 spec.md 작성</small></div></div>
+            <div class="dep-stage"><div class="dot">3</div><div><b>Build</b><small>plan.md 승인 후 구현</small></div></div>
+            <div class="dep-stage"><div class="dot">4</div><div><b>Test</b><small>검증 증거 + evals</small></div></div>
+            <div class="dep-stage"><div class="dot">5</div><div><b>Deploy</b><small>agentic review + hooks</small></div></div>
+            <div class="dep-stage"><div class="dot">6</div><div><b>Maintain</b><small>운영 신호가 다시 루프를 시작</small></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plan" class="article-section">
+        <div class="stage-head">
+          <div class="stage-number">01</div>
+          <div class="stage-title"><h2>Plan</h2><p>아이디어가 누군가의 문서화 순서를 기다리지 않도록, 처음 말한 사람의 의도를 바로 버전 관리 가능한 아티팩트로 남긴다.</p></div>
+        </div>
+
+        <h3>Capture as <code>intent.md</code></h3>
+        <div class="prose">
+          <p>출발점은 사람의 아이디어일 수도 있고, 티켓이나 운영 알람일 수도 있다. 중요한 것은 출처와 상관없이 한 가지 형태의 <code>intent.md</code>로 수렴한다는 점이다.</p>
+          <p>이 문서는 완성된 PRD가 아니라 “왜 이 일을 하는지”를 잃지 않게 붙잡는 proto-spec에 가깝다. 문제, 원하는 결과, 영향을 받는 사용자·시스템, 제약, 아직 답하지 못한 질문을 담는다.</p>
+        </div>
+
+        <div class="before-after">
+          <div class="ba-col"><div class="ba-label">Traditional</div><p>아이디어 → 백로그 → 유저 스토리 → 포인트 추정 → refinement 회의를 거치며 소유권이 여러 번 넘어간다. 엔지니어가 받을 때는 최초 의도에서 멀어질 수 있다.</p></div>
+          <div class="ba-col"><div class="ba-label">AI-native</div><p>아이디어를 낸 사람이 에이전트와 바로 브레인스토밍하고, 결과를 <code>intent.md</code>로 남긴다. 다음 단계가 즉시 읽을 수 있고 수정 이력도 남는다.</p></div>
+        </div>
+
+        <h3>실행 순서</h3>
+        <div class="steps">
+          <div class="step"><div><b>문제를 평소 언어로 설명한다.</b><span>형식적인 요구사항 문법보다 현재 못 하는 일, 영향을 받는 사람, 원하는 개선 상태를 말한다.</span></div></div>
+          <div class="step"><div><b>에이전트가 분석가처럼 질문하게 한다.</b><span>범위, 사용자, 제약, 성공 조건, 제외 범위를 구체화한다.</span></div></div>
+          <div class="step"><div><b>조직 템플릿으로 <code>intent.md</code>를 생성한다.</b><span>반복되는 작성 규칙은 Skill로 만들어 누구나 같은 품질의 문서를 만들 수 있게 한다.</span></div></div>
+          <div class="step"><div><b>작성자가 오해를 바로잡는다.</b><span>AI가 정리했어도 의도를 승인하는 책임은 사람에게 있다.</span></div></div>
+          <div class="step"><div><b>공유 저장소에 커밋한다.</b><span>작성자, 시간, 수정 이력이 기록되고 제품 책임자가 다음 단계 진행 여부를 판단한다.</span></div></div>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>intent.md · 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre># Intent: 고객 상태 조회 셀프서비스
+
+작성자: 고객운영팀
+상태: draft
+
+## Problem
+고객이 처리 상태를 알기 위해 상담센터에 반복 문의한다.
+
+## Outcome
+포털에서 현재 상태, 다음 단계, 예상 처리일을 확인할 수 있게 한다.
+
+## Affected users / systems
+고객, 상담 담당자, portal-web, claims-api
+
+## Constraints
+새로운 개인정보를 세션에 저장하지 않는다.
+기존 로그인 체계를 그대로 사용한다.
+
+## Open questions
+외부 협력사 사용자도 같은 상태 화면이 필요한가?</pre>
+        </div>
+
+        <div class="governance">
+          <div class="gov-card"><h4>Governance</h4><p>증거는 커밋된 <code>intent.md</code>와 Git 이력이다. 제품 책임자의 승인/거절 자체가 다음 단계로 넘어가는 게이트가 된다.</p></div>
+          <div class="gov-card"><h4>핵심 설계 포인트</h4><p>Git을 모르는 비개발자가 아이디어 제공자라면 UI나 커넥터가 대신 커밋하도록 만들어야 한다. 사용자는 Git 조작이 아니라 의도 검토에 집중한다.</p></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><small>Leading</small><b>첫 대화 → intent.md 커밋 시간</b><p>며칠·몇 주 걸리던 요구 구체화가 몇 시간 수준으로 줄어드는지 본다.</p></div>
+          <div class="metric"><small>Lagging</small><b>Design 단계로 살아남는 intent 비율</b><p>무분별한 자동 문서화가 아니라 실제 가치 있는 아이디어가 선별되는지 확인한다.</p></div>
+        </div>
+      </section>
+
+      <section id="design" class="article-section">
+        <div class="stage-head">
+          <div class="stage-number">02</div>
+          <div class="stage-title"><h2>Design</h2><p>요구사항과 설계를 따로 넘기지 않고, 조직 정책을 에이전트의 작업 규칙으로 적용하면서 하나의 <code>spec.md</code>로 압축한다.</p></div>
+        </div>
+
+        <h3>Requirements + Design in one working session</h3>
+        <div class="prose">
+          <p>승인된 <code>intent.md</code>를 입력으로 받아, 에이전트가 기존 코드베이스와 조직 규칙을 읽으며 요구사항과 설계를 함께 작성한다. 보안, 컴플라이언스, 브랜드, UX 같은 기준은 사람이 나중에 기억해서 체크하는 항목이 아니라 Skill로 주입되는 제약이 된다.</p>
+          <p>제품 책임자는 문서를 직접 처음부터 쓰기보다, “이 스펙이 최초 문제를 제대로 해결하는가?”를 검토한다. 서로 충돌하는 정책이나 모호한 지점은 에이전트가 <strong>flagged concern</strong>으로 표시해 사람이 판단할 위치를 좁혀준다.</p>
+        </div>
+
+        <div class="before-after">
+          <div class="ba-col"><div class="ba-label">Traditional</div><p>분석가가 요구사항을 정리하고, 디자이너나 아키텍트가 다시 해석한다. 단계가 분리되어 책임은 명확하지만, 시간과 의미 손실이 커진다.</p></div>
+          <div class="ba-col"><div class="ba-label">AI-native</div><p><code>intent.md</code>와 조직 Skills를 함께 읽혀 한 세션에서 <code>spec.md</code>를 만든다. 제품 책임자는 결과와 위험 표시를 검토한다.</p></div>
+        </div>
+
+        <h3>실행 순서</h3>
+        <div class="steps">
+          <div class="step"><div><b><code>intent.md</code>와 조직 규칙을 세션에 제공한다.</b><span>브랜드·보안·UX 규칙을 파일 또는 Skill로 함께 로드한다.</span></div></div>
+          <div class="step"><div><b>설계와 요구사항을 동시에 작성하게 한다.</b><span>기존 코드베이스에 어떻게 통합할지, 어떤 제약이 충돌하는지 명시적으로 요구한다.</span></div></div>
+          <div class="step"><div><b>제품 책임자가 문제-해결 적합성을 검토한다.</b><span>스펙이 intent의 문제를 해결하는지, 열린 질문이 해소되었는지 확인한다.</span></div></div>
+          <div class="step"><div><b>flagged concern부터 처리한다.</b><span>정책 소유자나 기술 리드와 협의해 모호한 위험을 Build 전에 없앤다.</span></div></div>
+          <div class="step"><div><b><code>spec.md</code>를 커밋한다.</b><span>무엇을 원했는지(intent)와 무엇을 만들기로 했는지(spec)가 한 쌍의 기록이 된다.</span></div></div>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>설계 생성 프롬프트 · 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre>intent.md를 읽고 기존 코드베이스에 통합할 요구사항/설계 문서를 작성해줘.
+
+반드시 다음 규칙을 적용해:
+- API 보안 Skill
+- 디자인 시스템 Skill
+- 접근성/UX Skill
+
+결과는 spec.md 형식으로 작성하고,
+정책이 충돌하거나 확신할 수 없는 부분은 "Areas of concern"에 별도 표시해.
+엔지니어가 바로 구현 계획을 세울 수 있을 정도로 구체적으로 써줘.</pre>
+        </div>
+
+        <div class="governance">
+          <div class="gov-card"><h4>Governance</h4><p>정책을 몇 주 뒤 리뷰에서 발견하지 않고 스펙 작성 순간에 적용한다. 어떤 Skill 버전과 어떤 프롬프트가 사용됐는지도 버전 관리하면 감사 가능성이 높아진다.</p></div>
+          <div class="gov-card"><h4>Human gate</h4><p>최종적으로 Build로 넘어갈지 결정하는 것은 제품 책임자와 필요 시 기술 리드다. AI는 위험을 드러내지만 승인 책임을 대신하지 않는다.</p></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><small>Leading</small><b>intent.md → spec.md 리드타임</b><p>요구 정리와 설계가 별도 프로젝트처럼 늘어지는 시간을 비교한다.</p></div>
+          <div class="metric"><small>Lagging</small><b>Build 이후 spec 수정 횟수</b><p>구현이 시작된 뒤 요구가 뒤집히는 비율이 줄어드는지 추적한다.</p></div>
+        </div>
+      </section>
+
+      <section id="build" class="article-section">
+        <div class="stage-head">
+          <div class="stage-number">03</div>
+          <div class="stage-title"><h2>Build</h2><p>승인된 계획 없이 바로 코드를 만들지 않는다. 구현 지식과 팀 규칙을 사람이 기억하는 관행이 아니라 에이전트가 매번 읽는 파일로 만든다.</p></div>
+        </div>
+
+        <h3>Plan mode를 기본 출발점으로</h3>
+        <div class="prose">
+          <p>엔지니어는 <code>spec.md</code>를 주고 바로 구현을 시작시키는 대신, 먼저 계획 모드에서 파일 변경 범위, 작업 순서, 테스트 전략, 위험을 정리하게 한다. 계획이 틀렸다면 코드를 되돌리는 것보다 문서 한 장을 고치는 편이 훨씬 싸다.</p>
+          <p>좋은 <code>plan.md</code>는 이전 대화를 본 적 없는 엔지니어도 실행할 수 있을 만큼 구체적이어야 한다. 구현이 계획에서 벗어나면 코드만 고치지 말고 <code>plan.md</code>도 함께 수정해 감사 기록이 현실과 일치하도록 한다.</p>
+        </div>
+
+        <div class="before-after">
+          <div class="ba-col"><div class="ba-label">Traditional</div><p>구현 방법은 엔지니어 머릿속이나 짧은 티켓 댓글에 남는다. 리뷰어는 완성된 diff를 처음 보고 설계 수준의 문제를 뒤늦게 발견한다.</p></div>
+          <div class="ba-col"><div class="ba-label">AI-native</div><p>읽기 전용 계획 단계에서 <code>plan.md</code>를 만든 뒤 사람이 승인한다. PR 검토 시 실제 diff가 이 계획과 일치하는지 확인할 수 있다.</p></div>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>plan.md · 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre># Plan: 고객 상태 조회 셀프서비스
+
+## Files that change
+- portal/src/claims/StatusPanel.tsx (new)
+- claims-api/routes/status.py
+- claims-api/tests/test_status.py
+
+## Order
+1. 기존 인증 뒤에 상태 조회 endpoint 추가
+2. endpoint를 사용하는 StatusPanel 작성
+3. 포털 navigation에 연결
+
+## Risks
+claims-core API의 호출 제한을 넘지 않도록 캐시 필요
+
+## Proof
+- 네 가지 claim state에 대한 API 테스트 통과
+- 승인된 화면 스펙과 UI snapshot 일치</pre>
+        </div>
+
+        <h3><code>CLAUDE.md</code> — 팀의 작업 기억</h3>
+        <div class="prose">
+          <p><code>CLAUDE.md</code>는 새 팀원이 첫날 알아야 할 정도의 핵심 지식을 에이전트에게 제공하는 파일이다. 빌드/테스트 명령, 중요한 코딩 규칙, 아키텍처 경계, 에이전트가 자주 틀리는 점을 짧고 명확하게 유지한다.</p>
+          <p>원칙은 단순하다. <strong>같은 실수를 두 번 보면 팀의 기억으로 승격</strong>한다. 단, 모든 것을 집어넣으면 컨텍스트가 오염되므로 오래된 지식은 계속 정리해야 한다.</p>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>CLAUDE.md · 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre># Payments service
+
+## Commands
+- Build: make build
+- Test: make test
+- Integration: make itest
+- Lint: make lint
+
+## Conventions
+- Java 21 / Spring Boot 3
+- 금액은 double 대신 BigDecimal
+- 모든 endpoint는 integration test 필요
+
+## Architecture
+- api/: REST controller
+- core/: domain logic
+- adapters/: external system access
+
+## Things the agent often gets wrong
+- dependency version은 임의로 올리지 않는다
+- legacy v1/는 변경 금지, 신규 변경은 v2/에 작성</pre>
+        </div>
+
+        <h3>Skills — 조직 지식을 실행 가능한 규칙으로</h3>
+        <div class="prose">
+          <p>팀 내부 정책 중 “항상 같은 방식으로 적용되어야 하는 것”은 Skill로 만든다. 예를 들어 외부 API 보안 기준, 브랜드 문구 규칙, 데이터 분류 정책처럼 반복 적용이 필요한 지식을 <code>SKILL.md</code>로 패키징한다.</p>
+          <p>Skill은 에이전트가 적절한 상황에서 규칙을 읽게 만드는 강한 가이드지만, 반드시 지켜져야 하는 통제라면 뒤 단계의 deterministic Hook이나 PR 검증과 결합해야 한다.</p>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>.claude/skills/secure-api-review/SKILL.md · 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre>---
+name: secure-api-review
+description: 외부 공개 API를 만들거나 수정할 때 적용
+---
+
+# Secure API review
+
+1. Authentication
+   - 모든 endpoint는 gateway JWT 필요
+2. Input validation
+   - OpenAPI schema에 따라 request body 검증
+3. Audit
+   - 상태 변경 요청은 audit event 기록
+4. PII
+   - pii 필드는 log / error message에 노출 금지
+
+완료 전에 scripts/check-endpoints.sh를 실행하고 결과를 요약에 포함한다.</pre>
+        </div>
+
+        <div class="note-box"><strong>기존 Jira/ServiceNow가 있다면?</strong><p>모든 것을 Markdown으로 옮길 필요는 없다. 각 아티팩트마다 “어디가 source of truth인지” 하나만 정하고, 다른 시스템에는 링크나 commit SHA를 남기는 방식으로 공존할 수 있다.</p></div>
+
+        <div class="metrics">
+          <div class="metric"><small>Leading</small><b>첫 구현 패스에서 바로 merge되는 비율</b><p>계획 품질이 높다면 구현 재시도가 줄어든다.</p></div>
+          <div class="metric"><small>Lagging</small><b>PR 재작업 횟수 + plan 일치도</b><p>최종 diff가 승인된 계획을 얼마나 잘 따르는지 확인한다.</p></div>
+        </div>
+      </section>
+
+      <section id="test" class="article-section">
+        <div class="stage-head">
+          <div class="stage-number">04</div>
+          <div class="stage-title"><h2>Test</h2><p>테스트를 마지막 QA 관문으로 두지 않고, 에이전트가 작업 완료를 주장하기 전에 증거를 제출하게 만들고 구성 변경 자체도 eval로 회귀 테스트한다.</p></div>
+        </div>
+
+        <h3>“완료”에는 증거가 붙어야 한다</h3>
+        <div class="prose">
+          <p>에이전트는 코드가 그럴듯하다는 이유만으로 완료를 선언하면 안 된다. 빌드, 단위 테스트, 통합 테스트, lint, 필요 시 화면 diff를 실행하고 실제 출력과 함께 결과를 보고해야 한다.</p>
+          <p>더 강한 통제가 필요하면 Hook으로 “검증 명령을 수행하지 않으면 완료 보고 불가”를 강제할 수 있다. 수정 작업에서 테스트 파일 자체를 바꾸지 못하게 막으면, 실패를 테스트 삭제로 숨기는 경로도 차단할 수 있다.</p>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>CLAUDE.md · verification block</span><button class="copy-btn" type="button">복사</button></div>
+<pre>## Verifying your work
+
+- Build: make build
+- Test: make test
+- Lint: make lint
+
+완료를 보고하기 전에 세 명령을 모두 실행한다.
+테스트가 실패하면 테스트를 지우지 말고 구현을 고친다.
+최종 요약에는 실행한 명령과 핵심 결과를 포함한다.</pre>
+        </div>
+
+        <h3>Continuous evals in CI</h3>
+        <div class="prose">
+          <p>AI 에이전트의 프롬프트, 모델, <code>CLAUDE.md</code>, Skills, Hooks가 바뀌면 사실상 “개발 도구의 행동”이 바뀐다. 따라서 코드 회귀 테스트처럼 에이전트 구성에도 회귀 테스트가 필요하다.</p>
+          <p>실제 업무에서 대표 과제를 20~50개 모아 eval 세트를 만들고, 기대 결과를 테스트·lint·정책 준수 같은 체크로 정의한다. 이후 에이전트 구성 변경 PR이나 정기 스케줄에서 비대화식으로 실행한다.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step"><div><b>실제 업무 사례를 eval 데이터로 수집한다.</b><span>장난감 예제보다 최근 팀이 실제 해결한 과제를 쓰는 편이 좋다.</span></div></div>
+          <div class="step"><div><b>각 과제의 합격 조건을 명시한다.</b><span>테스트 통과, lint clean, 특정 정책 유지, 동작 보존처럼 자동 확인 가능한 조건을 우선한다.</span></div></div>
+          <div class="step"><div><b>에이전트 구성 변경 시 자동 실행한다.</b><span><code>CLAUDE.md</code>, Skill, Hook 변경은 코드와 동일한 수준의 회귀 테스트 대상이 된다.</span></div></div>
+          <div class="step"><div><b>운영 사고를 새 eval로 영구화한다.</b><span>한 번 생긴 장애가 같은 방식으로 다시 발생하지 않게 방어막을 쌓는다.</span></div></div>
+        </div>
+
+        <div class="governance">
+          <div class="gov-card"><h4>Evidence</h4><p>실제 테스트 출력, 빌드 로그, 화면 비교 결과가 검증 증거가 된다. 세션 로그와 CI 체크 결과가 감사 기록으로 남는다.</p></div>
+          <div class="gov-card"><h4>Why it matters</h4><p>리뷰어는 “테스트를 정말 돌렸나?” 같은 기계적 질문보다 의도, 위험, 사용자 영향에 시간을 쓸 수 있다.</p></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><small>Leading</small><b>Agent-written PR의 첫 CI 성공률</b><p>작업 완료 전 자체 검증이 제대로 작동하는지 본다.</p></div>
+          <div class="metric"><small>Lagging</small><b>PR review time / change failure rate</b><p>검증 자동화가 실제 리뷰 시간과 운영 실패를 줄였는지 확인한다.</p></div>
+        </div>
+      </section>
+
+      <section id="deploy" class="article-section">
+        <div class="stage-head">
+          <div class="stage-number">05</div>
+          <div class="stage-title"><h2>Deploy</h2><p>모든 줄을 사람이 직접 검토하는 방식 대신, 여러 층의 에이전트 검토와 deterministic gate를 조합해 사람의 판단을 위험한 지점에 집중시킨다.</p></div>
+        </div>
+
+        <h3>Agentic review + human escalation</h3>
+        <div class="prose">
+          <p>PR이 생성되면 에이전트가 먼저 <code>intent.md</code>, <code>spec.md</code>, <code>plan.md</code>, 실제 diff를 함께 비교해 “원래 목적과 구현이 일치하는지”, “중요 정책을 어겼는지”, “테스트 증거가 충분한지”를 확인한다.</p>
+          <p>모든 PR을 동일한 강도로 사람이 읽지 않고, 규제 코드·보안 민감 경로·큰 blast radius처럼 조직이 중요하게 분류한 경우에만 사람이 필수 승인자로 들어오게 할 수 있다. 즉 사람을 제거하는 게 아니라 <strong>사람이 봐야 할 변경을 더 정확히 골라내는 구조</strong>다.</p>
+        </div>
+
+        <h3>Hooks — 승인 정책을 실행 순간에 강제</h3>
+        <div class="prose">
+          <p>Skill이 “이렇게 해야 한다”를 가르치는 규칙이라면 Hook은 “이 조건이면 실행을 막는다”에 가깝다. 운영 배포, 보호 경로 수정, 외부 네트워크 접근 같은 행동 직전에 스크립트를 실행해 허용·추가 승인 요청·차단을 결정한다.</p>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>.claude/settings.json · hook 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/production-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+        </div>
+
+        <div class="artifact-example">
+          <div class="artifact-toolbar"><span>production-gate.sh · 재구성 예시</span><button class="copy-btn" type="button">복사</button></div>
+<pre>#!/usr/bin/env bash
+cmd=$(jq -r '.tool_input.command' &lt; /dev/stdin)
+
+if [[ "$cmd" == *"deploy"* &amp;&amp; "$cmd" == *"production"* ]]; then
+  if [[ -z "${RELEASE_APPROVAL:-}" ]]; then
+    echo "운영 배포에는 release approval이 필요합니다." &gt;&amp;2
+    exit 2
+  fi
+fi
+
+exit 0</pre>
+        </div>
+
+        <h3>Enterprise에서는 managed settings로 못 끄게</h3>
+        <div class="prose">
+          <p>규제가 강한 조직에서는 로컬 설정만으로 충분하지 않다. 민감 파일 읽기 차단, 임의 네트워크 접근 차단, 허용된 명령만 자동 승인, sandbox 필수, 개인이 Hook을 끄지 못하게 하는 managed policy가 필요하다.</p>
+          <p>이런 구성은 “사람이 규칙을 기억해 조심한다”가 아니라 <strong>실행 환경 자체가 위반 경로를 없애는 방식</strong>으로 거버넌스를 바꾼다.</p>
+        </div>
+
+        <div class="note-box"><strong>핵심 원칙</strong><p>정책은 문서에만 있으면 속도와 함께 희석된다. 가능한 것은 Skill로 작업 중 적용하고, 절대 깨지면 안 되는 것은 Hook·CI·sandbox 같은 deterministic control로 막는다.</p></div>
+
+        <div class="metrics">
+          <div class="metric"><small>Leading</small><b>자동 검토로 분류 가능한 PR 비율</b><p>사람이 모든 변경을 동일하게 보는 비용이 얼마나 줄었는지 본다.</p></div>
+          <div class="metric"><small>Lagging</small><b>배포 실패율 + 정책 위반 재발률</b><p>자동화된 gate가 실제 운영 안정성과 규제 준수에 기여했는지 확인한다.</p></div>
+        </div>
+      </section>
+
+      <section id="maintain" class="article-section">
+        <div class="stage-head">
+          <div class="stage-number">06</div>
+          <div class="stage-title"><h2>Maintain</h2><p>운영은 끝 단계가 아니다. 서비스에서 나온 신호를 에이전트가 진단하고, 작은 수정은 PR로, 큰 문제는 새로운 <code>intent.md</code>로 되돌려 전체 사이클을 다시 시작한다.</p></div>
+        </div>
+
+        <h3>운영 신호가 다시 개발 입력이 된다</h3>
+        <div class="prose">
+          <p>메트릭이 정상 범위를 벗어나거나 보안 스캔이 취약점을 찾으면 에이전트가 먼저 맥락을 모은다. 로그와 최근 배포, 관련 코드, 과거 유사 사고를 연결해 가설을 세우고, 수정 범위를 판단한다.</p>
+          <p>작고 명확한 문제라면 바로 제한된 수정 PR을 만들 수 있다. 반대로 여러 시스템에 영향을 주는 문제나 제품 결정이 필요한 문제라면 자동으로 <code>intent.md</code>를 만들고 Stage 1로 되돌린다.</p>
+        </div>
+
+        <div class="before-after">
+          <div class="ba-col"><div class="ba-label">Traditional</div><p>운영 담당자가 알람을 보고 티켓을 만들고, 담당 엔지니어가 맥락을 다시 수집하고, 나중에 수정이 시작된다.</p></div>
+          <div class="ba-col"><div class="ba-label">AI-native</div><p>운영 신호와 조직 지식에 접근 가능한 에이전트가 즉시 진단을 시작하고, 변경 범위에 따라 PR 또는 새 intent로 라우팅한다.</p></div>
+        </div>
+
+        <h3>On-call에서도 같은 루프 유지</h3>
+        <div class="prose">
+          <p>장애가 Slack/Teams 같은 협업 채널에서 시작되더라도 원리는 같다. 대화 맥락, 진단 과정, 사람의 승인, 수정 결과가 한 채널에 남고, 에이전트가 관련 도구에 연결되어 있다면 메트릭 정상화까지 확인할 수 있다.</p>
+          <p>사후에는 post-mortem과 재발 방지 지식을 버전 관리 파일에 남기고, 필요하면 새로운 eval을 추가한다. 즉 운영 경험이 다음 에이전트 세션의 지식과 테스트로 다시 흡수된다.</p>
+        </div>
+
+        <div class="loop-card">
+          <div class="loop-caption">Maintenance에서 루프가 닫히는 두 가지 경로</div>
+          <div class="artifact-loop" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="artifact"><b>Alert / ticket</b><span>운영 신호</span></div>
+            <div class="artifact"><b>Diagnosis</b><span>로그·코드·최근 변경 분석</span></div>
+            <div class="artifact"><b>Small?</b><span>작으면 PR</span></div>
+            <div class="artifact"><b>Large?</b><span>크면 intent.md</span></div>
+          </div>
+          <div class="loop-return"><strong>PR</strong>은 Deploy gate로, <strong>intent.md</strong>는 Plan으로 돌아간다.</div>
+        </div>
+
+        <div class="governance">
+          <div class="gov-card"><h4>운영 자동화의 경계</h4><p>에이전트가 자동으로 조사할 수 있어도, 고위험 운영 변경과 규제 대상 액션은 기존 승인 체계를 Hook으로 유지해야 한다.</p></div>
+          <div class="gov-card"><h4>학습 루프</h4><p>사고 원인, 해결책, 새로운 eval, <code>CLAUDE.md</code>/Skill 수정이 다시 Build/Test 단계의 품질을 높인다.</p></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><small>Leading</small><b>알람 → 첫 진단 / 첫 패치 시간</b><p>사람이 호출되고 맥락을 모으는 시간을 얼마나 줄이는지 본다.</p></div>
+          <div class="metric"><small>Lagging</small><b>같은 유형 사고 재발률</b><p>운영 경험이 실제 eval과 지식 파일에 흡수되어 재발을 막는지 확인한다.</p></div>
+        </div>
+      </section>
+
+      <section id="closing" class="article-section">
+        <div class="section-kicker">Closing thoughts</div>
+        <h2>전체 생명주기를<br />에이전트가 읽을 수 있게</h2>
+        <div class="prose">
+          <p class="lede">AI-native SDLC의 본질은 코딩 도구를 더 많이 쓰는 것이 아니라, 사람의 판단은 중요한 게이트에 남기고 나머지 흐름을 아티팩트·자동 검증·정책 집행으로 연결하는 데 있다.</p>
+          <p>이 구조에서 Git이나 다른 source of truth는 단순 코드 저장소가 아니라 요구, 설계, 계획, 구현, 검증, 승인, 운영 학습이 이어지는 감사 기록이 된다. 에이전트는 이 기록을 읽어 다음 행동을 시작하고, 사람은 결과의 의도와 위험을 판단한다.</p>
+        </div>
+        <div class="closing-quote">루프는 계속 돈다.<br />사람의 판단은 그 위에 남는다.</div>
+        <div class="note-box">
+          <strong>이 페이지를 실무 체크리스트로 쓴다면</strong>
+          <p>먼저 한 프로젝트에서 <code>intent.md → spec.md → plan.md</code> 세 파일만 연결하고, 다음으로 <code>CLAUDE.md</code>와 반복 정책 Skill을 정리한 뒤, Test/Deploy 단계에 eval·Hook을 붙이는 순서가 부담이 적다. 마지막에 운영 사고를 다시 intent/eval로 되돌리면 루프가 완성된다.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div>
+      비공식 한국어 재구성 · 원문의 아이디어와 공개된 구조를 바탕으로 학습용으로 재서술했습니다.
+    </div>
+    <div><a href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noreferrer">Original article ↗</a></div>
+  </footer>
+
+  <script>
+    (() => {
+      const toggle = document.querySelector('.toc-toggle');
+      const toc = document.querySelector('.toc');
+      const tocLinks = [...document.querySelectorAll('.toc a')];
+      const sections = tocLinks
+        .map(a => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+
+      if (toggle && toc) {
+        toggle.addEventListener('click', () => {
+          const open = toc.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open ? '목차 닫기' : '목차 열기';
+        });
+      }
+
+      const setActive = (id) => {
+        tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      }, { rootMargin: '-18% 0px -66% 0px', threshold: [0, .05, .2, .5] });
+
+      sections.forEach(section => observer.observe(section));
+      if (sections[0]) setActive(sections[0].id);
+
+      tocLinks.forEach(a => a.addEventListener('click', () => {
+        if (window.innerWidth <= 980 && toc) {
+          toc.classList.remove('open');
+          if (toggle) {
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.textContent = '목차 열기';
+          }
+        }
+      }));
+
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+          const box = button.closest('.artifact-example');
+          const pre = box?.querySelector('pre');
+          if (!pre) return;
+          try {
+            await navigator.clipboard.writeText(pre.innerText);
+            const old = button.textContent;
+            button.textContent = '복사됨';
+            setTimeout(() => button.textContent = old, 1200);
+          } catch {
+            button.textContent = '선택해서 복사';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
